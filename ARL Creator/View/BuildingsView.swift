@@ -1,4 +1,5 @@
 import SwiftUI
+import AlertToast
 import Foundation
 
 struct BuildingsView: View {
@@ -8,19 +9,29 @@ struct BuildingsView: View {
     @State private var selectedBuilding: Building? = nil
     @State private var navigationPath = NavigationPath()
     
-    // State variables for the custom "alert" using a sheet
     @State private var isAddBuildingSheetPresented = false
     @State private var newBuildingName = ""
+    
+    @State private var showAddBuildingToast = false
     
     var body: some View {
         NavigationStack(path: $navigationPath) {
             VStack {
                 if buildingsModel.getBuildings().isEmpty {
                     VStack {
-                        Text("Add Building with + icon")
-                            .foregroundColor(.gray)
-                            .font(.headline)
-                            .padding()
+                        HStack(spacing: 4) {
+                            Text("Add building with")
+                                .foregroundColor(.gray)
+                                .font(.headline)
+
+                            Image(systemName: "plus.circle")
+                                .foregroundColor(.gray)
+
+                            Text("icon")
+                                .foregroundColor(.gray)
+                                .font(.headline)
+                        }
+                        .padding()
                     }
                     .foregroundColor(.white)
                     .frame(maxWidth: .infinity, maxHeight: .infinity)
@@ -46,6 +57,8 @@ struct BuildingsView: View {
                             }
                         }
                         .padding(.top, 15)
+                    }.toast(isPresenting: $showAddBuildingToast) {
+                        AlertToast(type: .complete(Color.green), title: "Building added!")
                     }
                 }
             }
@@ -77,63 +90,27 @@ struct BuildingsView: View {
         }
     }
     
-    // Custom sheet content
     private var addBuildingSheet: some View {
-        VStack(spacing: 16) {
-            Text("Add New Building")
-                .font(.title)
-                .foregroundColor(.customBackground)
-                .bold()
-                .padding(.top)
-            
-            Image(systemName: "plus.viewfinder")
-                .resizable()
-                .scaledToFit()
-                .frame(width: 50, height: 50)
-                .foregroundColor(.blue)
-            
-            TextField("Enter new Building Name", text: $newBuildingName)
-                .padding()
-                .background(Color(.systemGray6))
-                .foregroundColor(.customBackground)
-                .cornerRadius(8)
-                .padding(.horizontal)
-            
-            HStack {
-                Button(action: {
-                    addNewBuilding()
-                    isAddBuildingSheetPresented = false
-                }) {
-                    Text("Add")
-                        .font(.title)
-                        .bold()
-                        .padding()
-                        .background(Color.green)
-                        .foregroundColor(.white)
-                        .cornerRadius(30)
-                }
-                .disabled(newBuildingName.isEmpty)
-            }
-            .padding(.horizontal)
-            .padding(.bottom)
-
-            
-        }
-        .presentationDetents([.height(370)])
-        .presentationDragIndicator(.visible)
-        .frame(maxWidth: .infinity, maxHeight: .infinity)
-        .background(Color.white)
-        .cornerRadius(16)
-        .padding()
+        AddSheetBaseView(
+            title: "Create New Building",
+            placeholder: "Building Name",
+            buttonText: "Create Building",
+            textInput: $newBuildingName,
+            onAdd: {
+                addNewBuilding()
+                isAddBuildingSheetPresented = false
+                showAddBuildingToast = true
+            },
+            isAddButtonDisabled: newBuildingName.isEmpty
+        )
     }
     
-    // Function to handle building creation
     private func addNewBuilding() {
         guard !newBuildingName.isEmpty else { return }
         
         let newBuilding = Building(name: newBuildingName, lastUpdate: Date(), floors: [], buildingURL: URL(fileURLWithPath: "") )
         buildingsModel.addBuilding(building: newBuilding)
-        newBuildingName = "" // Reset the input field
+        newBuildingName = ""
         isAddBuildingSheetPresented = false
     }
 }

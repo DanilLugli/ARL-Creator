@@ -1,0 +1,13 @@
+private var addFloorSheet: some View {
+    ReusableSheetView(
+        title: "Add New Floor",
+        placeholder: "Enter New Floor Name",
+        buttonText: "Add",
+        textInput: $newFloorName,
+        onAdd: {
+            addNewFloor()
+            isAddFloorSheetPresented = false
+        },
+        isAddButtonDisabled: newFloorName.isEmpty
+    )
+}

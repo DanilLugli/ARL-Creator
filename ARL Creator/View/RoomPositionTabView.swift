@@ -29,10 +29,19 @@ struct RoomPositionTabView: View {
                     }
                 }
             } else {
-                Text("Add & Calculate \(room.name) Position with + icon.")
-                    .foregroundColor(.gray)
-                    .font(.headline)
-                    .padding()
+                HStack(spacing: 4) {
+                    Text("Add & Calculate \(room.name) Position with")
+                        .foregroundColor(.gray)
+                        .font(.headline)
+
+                    Image(systemName: "plus.circle")
+                        .foregroundColor(.gray)
+
+                    Text("icon")
+                        .foregroundColor(.gray)
+                        .font(.headline)
+                }
+                .padding()
             }
         }
         .frame(maxWidth: .infinity, maxHeight: .infinity)

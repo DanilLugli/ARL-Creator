@@ -28,10 +28,19 @@ struct RoomConnectionsTabView: View {
     var body: some View {
         VStack {
             if filteredConnection.isEmpty {
-                Text("Add a Connection for \(room.name) using the + icon.")
-                    .foregroundColor(.gray)
-                    .font(.headline)
-                    .padding()
+                HStack(spacing: 4) {
+                    Text("Add Connection to \(room.name) with")
+                        .foregroundColor(.gray)
+                        .font(.headline)
+
+                    Image(systemName: "plus.circle")
+                        .foregroundColor(.gray)
+
+                    Text("icon")
+                        .foregroundColor(.gray)
+                        .font(.headline)
+                }
+                .padding()
             } else {
                 ScrollView {
                     LazyVStack(spacing: 40) {

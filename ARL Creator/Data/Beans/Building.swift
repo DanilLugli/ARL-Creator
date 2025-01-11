@@ -91,15 +91,13 @@ class Building: Encodable, ObservableObject, Hashable {
             try FileManager.default.createDirectory(at: floorURL, withIntermediateDirectories: true, attributes: nil)
             floor.floorURL = floorURL
             
-            // Creare le cartelle aggiuntive all'interno della directory del piano
-            let dataDirectory = floorURL//.appendingPathComponent(BuildingModel.FLOOR_DATA_FOLDER)
+            
+            let dataDirectory = floorURL
             let roomsDirectory = floorURL.appendingPathComponent(BuildingModel.FLOOR_ROOMS_FOLDER)
             
             try FileManager.default.createDirectory(at: dataDirectory, withIntermediateDirectories: true, attributes: nil)
             try FileManager.default.createDirectory(at: roomsDirectory, withIntermediateDirectories: true, attributes: nil)
            
-            
-            // Creare le cartelle aggiuntive all'interno della directory Data
             let jsonParametricDirectory = dataDirectory.appendingPathComponent("JsonParametric")
             let mapUsdzDirectory = dataDirectory.appendingPathComponent("MapUsdz")
             let plistMetadataDirectory = dataDirectory.appendingPathComponent("PlistMetadata")
@@ -114,13 +112,10 @@ class Building: Encodable, ObservableObject, Hashable {
     }
     
     func deleteFloor(floor: Floor) {
-        // Rimuovi il floor dall'array _floors
         _floors.removeAll { $0.id == floor.id }
         
-        // Ottieni l'URL della cartella del floor da eliminare
         let floorURL = buildingURL.appendingPathComponent(floor.name)
         
-        // Elimina la cartella del floor dal file system
         do {
             if FileManager.default.fileExists(atPath: floorURL.path) {
                 try FileManager.default.removeItem(at: floorURL)

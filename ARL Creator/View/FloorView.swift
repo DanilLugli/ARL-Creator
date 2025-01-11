@@ -1,4 +1,5 @@
 import SwiftUI
+import AlertToast
 import SceneKit
 import Foundation
 import UIKit
@@ -28,9 +29,14 @@ struct FloorView: View {
     @State private var showUpdateOptionsAlert = false
     @State private var showDeleteConfirmation = false
     @State private var showFloorUpdatePlanimetryAlert = false
+    @State private var showDeleteFloorToast = false
+    
+    @State private var showAddRoomToast = false
     
     @State private var alertMessage = ""
     @State private var errorMessage: String = ""
+    
+    @Environment(\.dismiss) private var dismiss
     
     var body: some View {
         
@@ -51,10 +57,22 @@ struct FloorView: View {
                 TabView(selection: $selectedTab) {
                     VStack {
                         if floor.planimetry.scnView.scene == nil {
-                            Text("Add Planimetry with + icon")
-                                .foregroundColor(.gray)
-                                .font(.headline)
-                                .padding()
+                            HStack(spacing: 4) {
+                                Text("Add Planimetry with")
+                                    .foregroundColor(.gray)
+                                    .font(.headline)
+
+                                Image(systemName: "plus.circle")
+                                    .foregroundColor(.gray)
+
+                                Text("icon inside a menu")
+                                    .foregroundColor(.gray)
+                                    .font(.headline)
+                                
+                                Image(systemName: "ellipsis.circle")
+                                    .foregroundColor(.gray)
+                            }
+                            .padding()
                         } else {
                             VStack {
                                 Toggle(isOn: $showFloorMap) {
@@ -93,10 +111,19 @@ struct FloorView: View {
                     VStack {
                         if floor.rooms.isEmpty {
                             VStack {
-                                Text("Add Room to \(floor.name) with + icon")
-                                    .foregroundColor(.gray)
-                                    .font(.headline)
-                                    .padding()
+                                HStack(spacing: 4) {
+                                    Text("Add room with")
+                                        .foregroundColor(.gray)
+                                        .font(.headline)
+
+                                    Image(systemName: "plus.circle")
+                                        .foregroundColor(.gray)
+
+                                    Text("icon")
+                                        .foregroundColor(.gray)
+                                        .font(.headline)
+                                }
+                                .padding()
                             }
                         } else {
                             TextField("Search", text: $searchText)
@@ -111,12 +138,21 @@ struct FloorView: View {
                                     ForEach(filteredRooms, id: \.id) { room in
                                         NavigationLink(destination: RoomView(room: room, floor: floor, building: building )) {
                                             let isSelected = floor.isMatrixPresent(named: room.name, inFileAt: floor.floorURL.appendingPathComponent("\(floor.name).json"))
-                                            RoomCardView(name: room.name, date: room.lastUpdate, position: isSelected, color: room.color, rowSize: 1, isSelected: false).padding()
+                                            RoomCardView(name: room.name,
+                                                         date: room.lastUpdate,
+                                                         position: isSelected,
+                                                         color: room.color,
+                                                         rowSize: 1,
+                                                         isSelected: false)
+                                            .padding()
                                         }
                                     }
                                 }
                             }
                         }
+                    }
+                    .toast(isPresenting: $showAddRoomToast) {
+                        AlertToast(type: .complete(Color.green), title: "Room added!")
                     }
                     .frame(maxWidth: .infinity, maxHeight: .infinity)
                     .background(Color.customBackground)
@@ -236,7 +272,11 @@ struct FloorView: View {
         .confirmationDialog("Are you sure to delete Floor?", isPresented: $showDeleteConfirmation, titleVisibility: .visible) {
             Button("Yes", role: .destructive) {
                 building.deleteFloor(floor: floor)
-                print("Floor eliminato")
+                showDeleteFloorToast = true
+                
+                DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
+                    dismiss()
+                }
             }
             
             Button("Cancel", role: .cancel) {
@@ -288,6 +328,9 @@ struct FloorView: View {
             Text("Enter a new name for the Floor.")
         }
         )
+        .toast(isPresenting: $showDeleteFloorToast) {
+            AlertToast(type: .complete(.green), title: "Floor Deleted")
+        }
         .sheet(isPresented: $isFloorPlanimetryUploadPicker) {
             FilePickerView { url in
                 selectedFileURL = url
@@ -323,51 +366,18 @@ struct FloorView: View {
     }
     
     private var addRoomSheet: some View {
-        VStack(spacing: 16) {
-            Text("Add New Room")
-                .font(.title)
-                .foregroundColor(.customBackground)
-                .bold()
-                .padding(.top)
-            
-            Image(systemName: "plus.viewfinder")
-                .resizable()
-                .scaledToFit()
-                .frame(width: 50, height: 50)
-                .foregroundColor(.blue)
-            
-            TextField("Enter New Room Name", text: $newRoomName)
-                .padding()
-                .foregroundColor(.customBackground)
-                .background(Color(.systemGray6))
-                .cornerRadius(8)
-                .padding(.horizontal)
-            
-            HStack {
-                Button(action: {
-                    addNewRoom()
-                    isRoomSheetPresented = false
-                }) {
-                    Text("Add")
-                        .font(.title)
-                        .bold()
-                        .padding()
-                        .background(Color.green)
-                        .foregroundColor(.white)
-                        .cornerRadius(30)
-                }
-                .disabled(newRoomName.isEmpty)
-            }
-            .padding(.horizontal)
-            .padding(.bottom)
-
-        }
-        .presentationDetents([.height(370)])
-        .presentationDragIndicator(.visible)
-        .frame(maxWidth: .infinity, maxHeight: .infinity)
-        .background(Color.white)
-        .cornerRadius(16)
-        .padding()
+        AddSheetBaseView(
+            title: "Create New Room",
+            placeholder: "Room Name",
+            buttonText: "Create Room",
+            textInput: $newRoomName,
+            onAdd: {
+                addNewRoom()
+                isRoomSheetPresented = false
+                showAddRoomToast = true
+            },
+            isAddButtonDisabled: newRoomName.isEmpty
+        )
     }
     
     private func addNewRoom() {

@@ -1,6 +1,7 @@
 import SwiftUI
 import Foundation
 import Combine
+import AlertToast
 
 struct RoomView: View {
     
@@ -35,6 +36,7 @@ struct RoomView: View {
     @State private var showUpdateOptionsAlert = false
     @State private var showRoomUpdatePlanimetryAlert = false
     @State private var showDeleteConfirmation = false
+    @State private var showDeleteRoomToast = false
     
     @State private var selectedColor = Color(
         .sRGB,
@@ -215,14 +217,7 @@ struct RoomView: View {
                 if selectedTab == 3 {
                     ZStack {
                         Menu {
-                            NavigationLink(destination: AddSameConnectionView(building: building, initialSelectedFloor: floor, initialSelectedRoom: room) ){
-                                Button(action: {
-                                    //isConnectionSameFloor = true
-                                }) {
-                                    Label("Create Same Floor Connection", systemImage: "arrow.left.arrow.right")
-                                }.disabled(true)
-                                
-                            }
+                            
                             
                             NavigationLink(destination: AddStairsConnectionView(building: building, initialSelectedFloor: floor, initialSelectedRoom: room) ){
                                 Button(action: {
@@ -230,6 +225,14 @@ struct RoomView: View {
                                 }) {
                                     Label("Create Adjacent Floors Connection", systemImage: "arrow.up.arrow.down")
                                 }
+                            }
+                            
+                            NavigationLink(destination: AddSameConnectionView(building: building, initialSelectedFloor: floor, initialSelectedRoom: room) ){
+                                Button(action: {
+                                }) {
+                                    Label("Create Same Floor Connection", systemImage: "arrow.left.arrow.right")
+                                }
+                                .disabled(true)
                             }
                             
                             
@@ -308,6 +311,9 @@ struct RoomView: View {
                 message: Text(errorMessage),
                 dismissButton: .default(Text("OK"))
             )
+        }
+        .toast(isPresenting: $showDeleteRoomToast) {
+            AlertToast(type: .complete(.green), title: "Room Deleted")
         }
         .sheet(isPresented: $isColorPickerPopoverPresented) {
             ZStack {
@@ -429,8 +435,10 @@ struct RoomView: View {
         .confirmationDialog("Are you sure to delete Room?", isPresented: $showDeleteConfirmation, titleVisibility: .visible) {
             Button("Yes", role: .destructive) {
                 floor.deleteRoom(room: room)
-                dismiss()
-                print("Room deleted and navigating back")
+                showDeleteRoomToast = true
+                DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
+                    dismiss()
+                }
             }
             
             Button("Cancel", role: .cancel) {}

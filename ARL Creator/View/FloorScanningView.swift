@@ -27,9 +27,11 @@ struct FloorScanningView: View {
         NavigationStack {
             ZStack {
                 if isScanningFloor, let captureView = captureView {
+                    
                     captureView
                         .edgesIgnoringSafeArea(.all)
-                        .toolbarBackground(.hidden, for: .navigationBar) 
+                        .toolbarBackground(.hidden, for: .navigationBar)
+                    
                 }
                 
                 else {
@@ -41,9 +43,7 @@ struct FloorScanningView: View {
                 VStack {
                     HStack {
                         if isScanningFloor {
-                            
-                            //SAVE ALTITUDE
-                            
+                                                        
                             ScanningCardView(
                                 messagesFromWorldMap: messagesFromWorldMap,
                                 newFeatures: namedUrl is Room ? worldMapNewFeatures : nil,

@@ -23,10 +23,19 @@ struct RoomTransitionZoneTabView: View {
     var body: some View {
         VStack {
             if room.transitionZones.isEmpty {
-                Text("Add Transition Zone to \(room.name) with + icon.")
-                    .foregroundColor(.gray)
-                    .font(.headline)
-                    .padding()
+                HStack(spacing: 4) {
+                    Text("Add Transition Zone to \(room.name) with")
+                        .foregroundColor(.gray)
+                        .font(.headline)
+
+                    Image(systemName: "plus.circle")
+                        .foregroundColor(.gray)
+
+                    Text("icon")
+                        .foregroundColor(.gray)
+                        .font(.headline)
+                }
+                .padding()
             } else {
                 
                 TextField("Search", text: $searchText)

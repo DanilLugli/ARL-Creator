@@ -37,6 +37,8 @@
 		AA64CC822C47FDA8005C883B /* RotoTraslationMatrix.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA64CC812C47FDA8005C883B /* RotoTraslationMatrix.swift */; };
 		AA64CC862C495D73005C883B /* Rectangle.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA64CC852C495D73005C883B /* Rectangle.swift */; };
 		AA64CC882C495F51005C883B /* Coordinates.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA64CC872C495F51005C883B /* Coordinates.swift */; };
+		AA6AE54E2D31824B00595591 /* AlertToast in Frameworks */ = {isa = PBXBuildFile; productRef = AA6AE54D2D31824B00595591 /* AlertToast */; };
+		AA6AE5502D32835800595591 /* AddSheetBaseView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA6AE54F2D32835800595591 /* AddSheetBaseView.swift */; };
 		AA78F5D22C2C69E90044F825 /* Building.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA78F5D12C2C69E90044F825 /* Building.swift */; };
 		AA78F5D42C2C6B570044F825 /* Floor.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA78F5D32C2C6B570044F825 /* Floor.swift */; };
 		AA78F5D62C2C6BAC0044F825 /* Room.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA78F5D52C2C6BAC0044F825 /* Room.swift */; };
@@ -107,6 +109,7 @@
 		AA64CC812C47FDA8005C883B /* RotoTraslationMatrix.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RotoTraslationMatrix.swift; sourceTree = "<group>"; };
 		AA64CC852C495D73005C883B /* Rectangle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Rectangle.swift; sourceTree = "<group>"; };
 		AA64CC872C495F51005C883B /* Coordinates.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Coordinates.swift; sourceTree = "<group>"; };
+		AA6AE54F2D32835800595591 /* AddSheetBaseView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddSheetBaseView.swift; sourceTree = "<group>"; };
 		AA78F5D12C2C69E90044F825 /* Building.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Building.swift; sourceTree = "<group>"; };
 		AA78F5D32C2C6B570044F825 /* Floor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Floor.swift; sourceTree = "<group>"; };
 		AA78F5D52C2C6BAC0044F825 /* Room.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Room.swift; sourceTree = "<group>"; };
@@ -152,6 +155,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				AA8E0A602C57E4B20097BDCD /* Numerics in Frameworks */,
+				AA6AE54E2D31824B00595591 /* AlertToast in Frameworks */,
 				AA8E0A5E2C57E4B20097BDCD /* ComplexModule in Frameworks */,
 				AA8E0A622C57E4B20097BDCD /* RealModule in Frameworks */,
 			);
@@ -309,6 +313,7 @@
 				AA3A24F42C62942300E162A3 /* ListConnectionCardView.swift */,
 				AA4D2CDA2C7358EE000312A7 /* RoomCardView.swift */,
 				AA0A80732C9472B600501EB4 /* MapControllerView.swift */,
+				AA6AE54F2D32835800595591 /* AddSheetBaseView.swift */,
 			);
 			path = Beans;
 			sourceTree = "<group>";
@@ -333,6 +338,7 @@
 				AA8E0A5D2C57E4B20097BDCD /* ComplexModule */,
 				AA8E0A5F2C57E4B20097BDCD /* Numerics */,
 				AA8E0A612C57E4B20097BDCD /* RealModule */,
+				AA6AE54D2D31824B00595591 /* AlertToast */,
 			);
 			productName = ScanBuild;
 			productReference = AAA29E662C1711AA00CA267C /* ARL Creator.app */;
@@ -364,6 +370,7 @@
 			mainGroup = AAA29E5D2C1711AA00CA267C;
 			packageReferences = (
 				AA8E0A5C2C57E4B20097BDCD /* XCRemoteSwiftPackageReference "swift-numerics" */,
+				AA6AE54C2D31824B00595591 /* XCRemoteSwiftPackageReference "AlertToast" */,
 			);
 			productRefGroup = AAA29E672C1711AA00CA267C /* Products */;
 			projectDirPath = "";
@@ -399,6 +406,7 @@
 				AAFB3A062C4DCFAB00DBC593 /* ScanningCardView.swift in Sources */,
 				AA2CA5592C3EF87A00C88C94 /* ReferenceMarker.swift in Sources */,
 				AA78F5D62C2C6BAC0044F825 /* Room.swift in Sources */,
+				AA6AE5502D32835800595591 /* AddSheetBaseView.swift in Sources */,
 				AA64CC802C47F91F005C883B /* ElevatorConnection.swift in Sources */,
 				AAE57FAB2C384E6400F0196F /* DefaultCardView.swift in Sources */,
 				AA2CA55B2C3F07A500C88C94 /* RoomView.swift in Sources */,
@@ -680,6 +688,14 @@
 /* End XCConfigurationList section */
 
 /* Begin XCRemoteSwiftPackageReference section */
+		AA6AE54C2D31824B00595591 /* XCRemoteSwiftPackageReference "AlertToast" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/elai950/AlertToast.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 1.3.9;
+			};
+		};
 		AA8E0A5C2C57E4B20097BDCD /* XCRemoteSwiftPackageReference "swift-numerics" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/apple/swift-numerics.git";
@@ -691,6 +707,11 @@
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
+		AA6AE54D2D31824B00595591 /* AlertToast */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = AA6AE54C2D31824B00595591 /* XCRemoteSwiftPackageReference "AlertToast" */;
+			productName = AlertToast;
+		};
 		AA8E0A5D2C57E4B20097BDCD /* ComplexModule */ = {
 			isa = XCSwiftPackageProductDependency;
 			package = AA8E0A5C2C57E4B20097BDCD /* XCRemoteSwiftPackageReference "swift-numerics" */;

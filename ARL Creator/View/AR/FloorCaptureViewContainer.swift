@@ -72,9 +72,7 @@ struct FloorCaptureViewContainer: UIViewRepresentable {
             fatalError("init(coder:) has not been implemented")
         }
         
-        func setCaptureView(_ r: FloorCaptureViewContainer) {
-            // Se è necessaria una configurazione aggiuntiva
-        }
+        func setCaptureView(_ r: FloorCaptureViewContainer) {}
         
         func captureSession(_ session: RoomCaptureSession, didEndWith data: CapturedRoomData, error: Error?) {
             if let error = error {
@@ -89,7 +87,6 @@ struct FloorCaptureViewContainer: UIViewRepresentable {
                     let finalRoom = try await self.roomBuilder.capturedRoom(from: data)
                     
                     saveUSDZMap(finalRoom, name, at: namedUrl.url)
-                    print("Room saved as USDZ at \(namedUrl.url)")
                     
                 } catch {
                     print("Error during room capturing or saving: \(error)")

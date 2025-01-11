@@ -14,10 +14,19 @@ struct RoomPlanimetryTabView: View {
     var body: some View {
         VStack {
             if room.planimetry.scnView.scene == nil {
-                Text("Add Planimetry for \(room.name) with + icon.")
-                    .foregroundColor(.gray)
-                    .font(.headline)
-                    .padding()
+                HStack(spacing: 4) {
+                    Text("Add Planimetry for \(room.name) with")
+                        .foregroundColor(.gray)
+                        .font(.headline)
+
+                    Image(systemName: "plus.circle")
+                        .foregroundColor(.gray)
+
+                    Text("icon")
+                        .foregroundColor(.gray)
+                        .font(.headline)
+                }
+                .padding()
             } else {
                 VStack {
                     ZStack {

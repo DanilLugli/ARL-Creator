@@ -1,4 +1,5 @@
 import SwiftUI
+import AlertToast
 import Foundation
 
 struct BuildingView: View {
@@ -10,8 +11,13 @@ struct BuildingView: View {
     @State private var newBuildingName: String = ""
     
     @State private var showDeleteConfirmation = false
+    @State private var showDeleteBuildingToast = false
+    @State private var showAddFloorToast = false
+    
     @State private var isAddFloorSheetPresented = false
     @State private var newFloorName = ""
+    
+    @Environment(\.dismiss) private var dismiss
     
     var body: some View {
         NavigationStack {
@@ -31,10 +37,19 @@ struct BuildingView: View {
                     
                     if building.floors.isEmpty {
                         VStack {
-                            Text("Add Floor to \(building.name) with + icon")
-                                .foregroundColor(.gray)
-                                .font(.headline)
-                                .padding()
+                            HStack(spacing: 4) {
+                                Text("Add floor with")
+                                    .foregroundColor(.gray)
+                                    .font(.headline)
+
+                                Image(systemName: "plus.circle")
+                                    .foregroundColor(.gray)
+
+                                Text("icon")
+                                    .foregroundColor(.gray)
+                                    .font(.headline)
+                            }
+                            .padding()
                         }
                         .frame(maxWidth: .infinity, maxHeight: .infinity)
                         .background(Color.customBackground)
@@ -58,6 +73,8 @@ struct BuildingView: View {
                         }
                         .padding(.top, 15)
                     }
+                }.toast(isPresenting: $showAddFloorToast) {
+                    AlertToast(type: .complete(Color.green), title: "Floor added!")
                 }
             }
             .background(Color.customBackground)
@@ -131,13 +148,21 @@ struct BuildingView: View {
         .confirmationDialog("Confirm Deletion", isPresented: $showDeleteConfirmation, titleVisibility: .visible) {
             Button("Delete", role: .destructive) {
                 BuildingModel.getInstance().deleteBuilding(building: building)
-                print("Building eliminato")
+                showDeleteBuildingToast = true // Mostra il toast
+
+                    // Esegui il dismiss dopo 2 secondi
+                DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
+                    dismiss()
+                }
             }
             
             Button("Cancel", role: .cancel) {}
         } message: {
             Text("Are you sure you want to delete this building? This action cannot be undone.")
         }
+        .toast(isPresenting: $showDeleteBuildingToast) {
+            AlertToast(type: .complete(.green), title: "Building Deleted")
+                }
         .sheet(isPresented: $isAddFloorSheetPresented) {
             addFloorSheet
         }
@@ -156,54 +181,20 @@ struct BuildingView: View {
     
     // Custom sheet content for adding a new floor
     private var addFloorSheet: some View {
-        VStack(spacing: 16) {
-            Text("Add New Floor")
-                .font(.title)
-                .foregroundColor(.customBackground)
-                .bold()
-                .padding(.top)
-            
-            Image(systemName: "plus.viewfinder")
-                .resizable()
-                .scaledToFit()
-                .frame(width: 50, height: 50)
-                .foregroundColor(.blue)
-            
-            TextField("Enter New Floor Name", text: $newFloorName)
-                .padding()
-                .foregroundColor(.customBackground)
-                .background(Color(.systemGray6))
-                .cornerRadius(8)
-                .padding(.horizontal)
-            
-            
-            HStack {
-                Button(action: {
-                    addNewFloor()
-                    isAddFloorSheetPresented = false
-                }) {
-                    Text("Add")
-                        .font(.title)
-                        .bold()
-                        .padding()
-                        .background(Color.green)
-                        .foregroundColor(.white)
-                        .cornerRadius(30)
-                }
-                .disabled(newFloorName.isEmpty)
-            }
-            .padding(.horizontal)
-            .padding(.bottom)
-
-        }
-        .presentationDetents([.height(370)])
-        .presentationDragIndicator(.visible)
-        .frame(maxWidth: .infinity, maxHeight: .infinity)
-        .background(Color.white)
-        .cornerRadius(16)
-        .padding()
+        AddSheetBaseView(
+            title: "Create New Floor",
+            placeholder: "Floor Name",
+            buttonText: "Create Floor",
+            textInput: $newFloorName,
+            onAdd: {
+                addNewFloor()
+                isAddFloorSheetPresented = false
+                showAddFloorToast = true
+            },
+            isAddButtonDisabled: newFloorName.isEmpty
+        )
     }
-    
+
     // Function to handle adding a new floor
     private func addNewFloor() {
         guard !newFloorName.isEmpty else { return }
@@ -227,7 +218,7 @@ struct BuildingView: View {
         )
         
         building.addFloor(floor: newFloor)
-        newFloorName = "" // Reset the input field
+        newFloorName = ""
     }
 }
 
